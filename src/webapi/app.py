@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ConfigDict, Field
 
 from src import db
-from src.workflow import router
+from src.agent_runtime import get_runner
 
 
 class ConversationMessage(BaseModel):
@@ -108,23 +108,13 @@ def analyze(payload: AnalyzeRequest) -> AnalyzeResponse:
             db_error=db_error,
         )
 
-    try:
-        answer, chart_config, raw_rows = router.run(
-            schema,
-            question,
-            [message.model_dump() for message in payload.history],
-        )
-    except Exception as exc:
-        return AnalyzeResponse(
-            answer="",
-            chart_config=None,
-            raw_rows=[],
-            db_error=str(exc),
-        )
+    runner = get_runner("legacy")
+    result = runner.run(
+        schema,
+        question,
+        [message.model_dump() for message in payload.history],
+    )
 
     return AnalyzeResponse(
-        answer=answer,
-        chart_config=chart_config,
-        raw_rows=raw_rows,
-        db_error=None,
+        **result.as_api_payload(),
     )

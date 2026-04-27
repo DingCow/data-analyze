@@ -16,7 +16,7 @@ from rich.table import Table
 from rich import box
 
 from src import db
-from src.workflow import router
+from src.agent_runtime import get_runner
 
 console = Console()
 
@@ -60,6 +60,7 @@ def main():
 
     # 多轮对话历史
     history = []
+    runner = get_runner("legacy")
 
     while True:
         try:
@@ -75,20 +76,19 @@ def main():
             console.print("[dim]再见！[/dim]")
             break
 
-        # 交给 Router Agent 处理，它会决定调用哪些子 Agent
-        # router.run 返回 (文字回答, 图表配置, 原始数据行)，CLI 只展示文字
-        try:
-            answer, _, raw_rows = router.run(schema, question, history)
-        except Exception as e:
-            console.print(f"[red]出错：{e}[/red]")
+        # 交给统一 runner 处理。
+        # 当前默认仍走 legacy，实现不变；后续可以切到 LangChain / LangGraph。
+        result = runner.run(schema, question, history)
+        if result.error:
+            console.print(f"[red]出错：{result.error}[/red]")
             continue
 
         # 展示最终回答
-        render_result(answer, raw_rows)
+        render_result(result.answer, result.raw_rows)
 
         # 更新对话历史，保留最近 10 轮
         history.append({"role": "user", "content": question})
-        history.append({"role": "assistant", "content": answer})
+        history.append({"role": "assistant", "content": result.answer})
         if len(history) > 20:
             history = history[-20:]
 
