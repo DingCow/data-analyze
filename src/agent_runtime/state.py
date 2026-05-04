@@ -20,14 +20,21 @@ class WorkflowResult:
     intent: str | None = None
     trace: list[str] = field(default_factory=list)
     error: str | None = None
+    debug: dict[str, Any] = field(default_factory=dict)
 
     def as_api_payload(self) -> dict[str, Any]:
         """转换成当前 FastAPI 响应需要的字段。"""
+        debug = self.debug or {
+            "trace": self.trace,
+            "retry_count": 0,
+            "error_node": None,
+        }
         return {
             "answer": self.answer,
             "chart_config": self.chart_config,
             "raw_rows": self.raw_rows,
             "db_error": self.error,
+            "debug": debug,
         }
 
 
@@ -43,8 +50,14 @@ class AgentGraphState(TypedDict, total=False):
     history: list[dict]
     intent: str
     subtasks: str
+    retry_question: str
     raw_rows: list[dict[str, Any]]
+    analysis_input: str
     analysis_text: str
+    report_payload: dict[str, Any]
     answer: str
     chart_config: dict[str, Any] | None
+    error: str | None
+    error_node: str | None
+    retry_count: int
     trace: list[str]

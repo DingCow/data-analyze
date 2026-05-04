@@ -60,7 +60,7 @@ def main():
 
     # 多轮对话历史
     history = []
-    runner = get_runner("legacy")
+    runner = get_runner("langgraph")
 
     while True:
         try:
@@ -76,8 +76,7 @@ def main():
             console.print("[dim]再见！[/dim]")
             break
 
-        # 交给统一 runner 处理。
-        # 当前默认仍走 legacy，实现不变；后续可以切到 LangChain / LangGraph。
+        # 交给 LangGraph runner 处理，当前分支默认验证新的编排方式。
         result = runner.run(schema, question, history)
         if result.error:
             console.print(f"[red]出错：{result.error}[/red]")

@@ -74,9 +74,14 @@ class TestApi(unittest.TestCase):
                 "chart_config": {"type": "bar", "x": "城市", "y": ["订单量"], "title": "对比"},
                 "raw_rows": [{"城市": "中山", "订单量": 23822}],
                 "db_error": None,
+                "debug": {
+                    "trace": [],
+                    "retry_count": 0,
+                    "error_node": None,
+                },
             },
         )
-        mock_get_runner.assert_called_once_with("legacy")
+        mock_get_runner.assert_called_once_with("langgraph")
 
     def test_analyze_rejects_blank_question(self):
         response = self.client.post(

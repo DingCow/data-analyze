@@ -69,10 +69,8 @@ def decompose(schema: str, question: str) -> str:
     return response.choices[0].message.content
 
 
-def analyze(question: str, raw_rows: list[dict]) -> tuple[str, list[dict]]:
-    """
-    后置分析：基于 SQL Agent 返回的结构化数据，做深度推理，输出分析结论。
-    """
+def format_raw_rows(raw_rows: list[dict]) -> str:
+    """把结构化查询结果转成模型更容易阅读的文字表格。"""
     # 把结构化数据转成文字表格，方便模型阅读
     if raw_rows:
         headers = list(raw_rows[0].keys())
@@ -88,8 +86,13 @@ def analyze(question: str, raw_rows: list[dict]) -> tuple[str, list[dict]]:
     else:
         data_text = "无数据"
 
-    # 把用户问题和格式化后的数据表格拼成一条消息给模型
-    user_message = f"""用户问题：{question}
+    return data_text
+
+
+def build_analysis_input(question: str, raw_rows: list[dict]) -> str:
+    """把用户问题和查询结果拼成后置分析模型的输入。"""
+    data_text = format_raw_rows(raw_rows)
+    return f"""用户问题：{question}
 
 以下是从数据库查到的相关数据：
 
@@ -97,6 +100,9 @@ def analyze(question: str, raw_rows: list[dict]) -> tuple[str, list[dict]]:
 
 请基于上面的数据回答用户问题，给出分析结论。"""
 
+
+def analyze_prepared(user_message: str) -> str:
+    """执行后置分析推理，输入必须已经完成格式化。"""
     debug("[Analysis Agent] 开始推理分析")
 
     response = client.chat.completions.create(
@@ -110,5 +116,17 @@ def analyze(question: str, raw_rows: list[dict]) -> tuple[str, list[dict]]:
         extra_body=THINKING_EXTRA_BODY,
     )
 
+    return response.choices[0].message.content
+
+
+def analyze(question: str, raw_rows: list[dict]) -> tuple[str, list[dict]]:
+    """
+    后置分析：基于 SQL Agent 返回的结构化数据，做深度推理，输出分析结论。
+
+    这个函数保留为兼容入口；LangGraph 分支会把准备输入和执行分析拆成两个节点。
+    """
+    user_message = build_analysis_input(question, raw_rows)
+    conclusion = analyze_prepared(user_message)
+
     # 返回推理结论文字 + 透传原始数据行（供 Report Agent 决定画什么图）
-    return response.choices[0].message.content, raw_rows
+    return conclusion, raw_rows

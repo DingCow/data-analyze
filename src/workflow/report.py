@@ -46,26 +46,13 @@ Markdown 报告要求：
 只输出 JSON，不要任何其他文字。"""
 
 
-def run(question: str, analysis: str, raw_rows: list[dict]) -> tuple[str, Optional[dict]]:
-    """
-    Report Agent 主函数：格式化报告 + 输出图表配置。
-
-    参数：
-      question - 用户的原始问题
-      analysis - Analysis Agent 输出的推理结论
-      raw_rows - SQL Agent 查到的原始数据行，用于提取列名供图表决策
-
-    返回：
-      (markdown报告文字, 图表配置字典)
-      - 图表配置字典示例：{"type": "line", "x": "月份", "y": ["收入"], "title": "月度收入趋势"}
-      - 如果不需要画图，图表配置为 None
-    """
+def build_report_input(question: str, analysis: str, raw_rows: list[dict]) -> str:
+    """把报告生成需要的上下文整理成模型输入。"""
     # 从原始数据中提取列名列表，告诉模型有哪些列可以用
     columns = list(raw_rows[0].keys()) if raw_rows else []
     columns_str = "、".join(columns) if columns else "无数据"
 
-    # 把用户问题、分析结论、列名一起发给模型
-    user_message = f"""用户问题：{question}
+    return f"""用户问题：{question}
 
 数据分析结论：
 {analysis}
@@ -74,6 +61,9 @@ def run(question: str, analysis: str, raw_rows: list[dict]) -> tuple[str, Option
 
 请按要求输出 JSON。"""
 
+
+def generate_report_payload(user_message: str) -> dict:
+    """调用 Report Agent 生成包含 Markdown 和图表配置的原始报告对象。"""
     debug("[Report Agent] 开始格式化报告")
 
     response = client.chat.completions.create(
@@ -93,15 +83,45 @@ def run(question: str, analysis: str, raw_rows: list[dict]) -> tuple[str, Option
 
     # 解析模型输出的 JSON
     try:
-        result = json.loads(raw)
-        markdown = result.get("markdown", "")
-        chart_config = result.get("chart", None)
-        # 如果 chart.type 为 null，统一转成 None
-        if chart_config and chart_config.get("type") is None:
-            chart_config = None
+        payload = json.loads(raw)
     except json.JSONDecodeError:
         # 万一模型没有严格输出 JSON，直接把原始内容作为 markdown，不画图
-        markdown = raw
-        chart_config = None
+        payload = {"markdown": raw, "chart": None}
+
+    return payload
+
+
+def extract_markdown(payload: dict) -> str:
+    """从报告对象中提取 Markdown 报告。"""
+    return payload.get("markdown", "")
+
+
+def extract_chart_config(payload: dict) -> Optional[dict]:
+    """从报告对象中提取图表配置，并统一处理不画图的情况。"""
+    chart_config = payload.get("chart", None)
+    # 如果 chart.type 为 null，统一转成 None
+    if chart_config and chart_config.get("type") is None:
+        return None
+    return chart_config
+
+
+def run(question: str, analysis: str, raw_rows: list[dict]) -> tuple[str, Optional[dict]]:
+    """
+    Report Agent 主函数：格式化报告 + 输出图表配置。
+
+    参数：
+      question - 用户的原始问题
+      analysis - Analysis Agent 输出的推理结论
+      raw_rows - SQL Agent 查到的原始数据行，用于提取列名供图表决策
+
+    返回：
+      (markdown报告文字, 图表配置字典)
+      - 图表配置字典示例：{"type": "line", "x": "月份", "y": ["收入"], "title": "月度收入趋势"}
+      - 如果不需要画图，图表配置为 None
+    """
+    user_message = build_report_input(question, analysis, raw_rows)
+    payload = generate_report_payload(user_message)
+    markdown = extract_markdown(payload)
+    chart_config = extract_chart_config(payload)
 
     return markdown, chart_config

@@ -58,12 +58,18 @@ class LangGraphWorkflowRunner:
         try:
             return run_router_graph(schema, question, history)
         except Exception as exc:
+            trace = ["langgraph.error"]
             return WorkflowResult(
                 answer="",
                 chart_config=None,
                 raw_rows=[],
-                trace=["langgraph.error"],
+                trace=trace,
                 error=str(exc),
+                debug={
+                    "trace": trace,
+                    "retry_count": 0,
+                    "error_node": "langgraph",
+                },
             )
 
 

@@ -33,6 +33,7 @@ class AnalyzeResponse(BaseModel):
     chart_config: dict[str, Any] | None
     raw_rows: list[dict[str, Any]]
     db_error: str | None
+    debug: dict[str, Any] = Field(default_factory=dict)
 
 
 class SchemaResponse(BaseModel):
@@ -94,7 +95,7 @@ def get_schema() -> SchemaResponse:
 
 @app.post("/api/analyze", response_model=AnalyzeResponse)
 def analyze(payload: AnalyzeRequest) -> AnalyzeResponse:
-    """把自然语言问题交给既有 Router 链路。"""
+    """把自然语言问题交给 LangGraph 编排链路。"""
     question = payload.question.strip()
     if not question:
         raise HTTPException(status_code=400, detail="question 不能为空")
@@ -108,7 +109,7 @@ def analyze(payload: AnalyzeRequest) -> AnalyzeResponse:
             db_error=db_error,
         )
 
-    runner = get_runner("legacy")
+    runner = get_runner("langgraph")
     result = runner.run(
         schema,
         question,
