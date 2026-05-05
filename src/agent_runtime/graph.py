@@ -25,6 +25,8 @@ from src.agent_runtime.nodes import (
 )
 from src.agent_runtime.state import AgentGraphState, WorkflowResult
 
+_ROUTER_GRAPH = None
+
 
 def build_router_graph():
     """把原 router.run 的 if/else 流程表达成状态图。"""
@@ -90,9 +92,17 @@ def build_router_graph():
     return builder.compile()
 
 
+def get_router_graph():
+    """复用已编译的 LangGraph 图，避免每次请求重复构建静态 DAG。"""
+    global _ROUTER_GRAPH
+    if _ROUTER_GRAPH is None:
+        _ROUTER_GRAPH = build_router_graph()
+    return _ROUTER_GRAPH
+
+
 def run_router_graph(schema: str, question: str, history: list[dict]) -> WorkflowResult:
     """运行 LangGraph router，并转换成统一 WorkflowResult。"""
-    graph = build_router_graph()
+    graph = get_router_graph()
     final_state = graph.invoke(
         {
             "schema": schema,

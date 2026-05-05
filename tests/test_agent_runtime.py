@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch
 
 from src.agent_runtime import get_runner
+from src.agent_runtime import graph as graph_module
 from src.agent_runtime.nodes import (
     analyze_data_node,
     generate_chart_config_node,
@@ -22,6 +23,19 @@ class TestAgentRuntime(unittest.TestCase):
 
         self.assertIsInstance(runner, LangGraphWorkflowRunner)
         self.assertEqual(runner.name, "langgraph")
+
+    def test_get_router_graph_reuses_compiled_graph(self):
+        graph_module._ROUTER_GRAPH = None
+        compiled_graph = object()
+
+        with patch("src.agent_runtime.graph.build_router_graph", return_value=compiled_graph) as mock_build:
+            first = graph_module.get_router_graph()
+            second = graph_module.get_router_graph()
+
+        self.assertIs(first, compiled_graph)
+        self.assertIs(second, compiled_graph)
+        mock_build.assert_called_once()
+        graph_module._ROUTER_GRAPH = None
 
 
 class TestLangGraphRunner(unittest.TestCase):

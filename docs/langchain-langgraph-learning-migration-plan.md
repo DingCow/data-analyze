@@ -1,4 +1,7 @@
-# LangChain → LangGraph 渐进式改造与同步学习计划
+# LangChain → LangGraph 渐进式改造与同步学习计划（历史记录）
+
+> 当前 `main` 分支已经完成 LangGraph 主线迁移，并由 `legacy` 分支保留旧架构 baseline。
+> 本文保留为学习过程记录，不再代表当前待执行计划。
 
 ## 🧾 简要总结
 
@@ -169,8 +172,8 @@
 
 实现决策：
 
-- `app.py` 通过 runner 抽象接入框架版，不直接依赖具体实现
-- Web 默认仍用 `legacy`，侧边栏可切换 `legacy/langchain/langgraph`
+- `src/webapi/app.py` 通过 runner 抽象接入框架版，不直接依赖具体实现
+- Web 当前默认使用 `main` 分支的 LangGraph runner；旧架构由 `legacy` 分支保留
 - 页面只展示用户必要信息，不暴露过多框架内部术语
 - 文档中补齐：
   - 架构演进说明

@@ -76,7 +76,7 @@ class LangGraphWorkflowRunner:
 def get_runner(name: str = "legacy") -> WorkflowRunner:
     """按名称返回 runner。
 
-    先开放 legacy / langgraph，后续可以继续挂 langchain。
+    main 分支默认使用 langgraph，legacy 保留为历史实现适配。
     """
     normalized = name.strip().lower()
     if normalized == "legacy":

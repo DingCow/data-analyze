@@ -10,8 +10,8 @@ from typing import Any, TypedDict
 class WorkflowResult:
     """统一工作流返回对象。
 
-    现阶段 legacy runner 会适配成这个结构；后续 LangChain / LangGraph
-    也必须返回同样字段，避免 CLI 和 Web 直接依赖某个具体框架。
+    legacy runner 和当前 LangGraph runner 都适配成这个结构，避免
+    CLI 和 Web 直接依赖某个具体编排实现。
     """
 
     answer: str

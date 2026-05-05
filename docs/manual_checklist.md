@@ -23,7 +23,7 @@
 优先在 Web 端执行：
 
 ```bash
-streamlit run app.py
+bash run.sh
 ```
 
 如果只想快速验证链路，也可以用 CLI：

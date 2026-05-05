@@ -1,7 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { buildAssistantPreview, buildJudgmentBreakdown, summarizeAnswer } from "./ui";
+import {
+  buildAssistantPreview,
+  buildDisplayReportMarkdown,
+  buildJudgmentBreakdown,
+  summarizeAnswer,
+} from "./ui";
 
 test("空字符串时返回默认标题和摘要", () => {
   const result = summarizeAnswer("");
@@ -102,4 +107,25 @@ test("助手预览只保留短摘要，不暴露完整报告", () => {
   assert.match(preview, /^已完成查询、分析和报告整理：深圳增长明显。/);
   assert.equal(preview.includes("|"), false);
   assert.ok(preview.length <= 90);
+});
+
+test("展示完整报告时只移除开头泛化标题", () => {
+  const markdown = buildDisplayReportMarkdown(`## 核心判断
+
+表现较弱的城市主要被订单流失拖累。
+
+### 关键依据
+
+- 中山下滑最明显。`);
+
+  assert.equal(markdown.startsWith("## 核心判断"), false);
+  assert.equal(markdown.includes("### 关键依据"), true);
+});
+
+test("展示完整报告时保留有业务含义的开头标题", () => {
+  const markdown = buildDisplayReportMarkdown(`## 深圳充电业务复盘
+
+订单和充电量均有增长。`);
+
+  assert.equal(markdown.startsWith("## 深圳充电业务复盘"), true);
 });

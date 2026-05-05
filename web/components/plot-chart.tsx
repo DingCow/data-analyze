@@ -50,6 +50,7 @@ export function PlotChart({ chartConfig, rows }: PlotChartProps) {
 
   const width = 640;
   const height = chartConfig.type === "line" ? 278 : 300;
+  const fittedWidth = Math.min(940, Math.max(560, points.length * 118 + 160));
   const padding = { top: 24, right: 28, bottom: points.length > 8 ? 64 : 46, left: 64 };
   const innerWidth = width - padding.left - padding.right;
   const innerHeight = height - padding.top - padding.bottom;
@@ -77,6 +78,7 @@ export function PlotChart({ chartConfig, rows }: PlotChartProps) {
       aria-label={chartConfig.title ?? "证据图表"}
       className="svg-chart"
       role="img"
+      style={{ maxWidth: `${fittedWidth}px` }}
       viewBox={`0 0 ${width} ${height}`}
     >
       {ticks.map((tick, index) => {

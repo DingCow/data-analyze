@@ -1,13 +1,15 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { CSSProperties, FormEvent, useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 import { PlotChart } from "../components/plot-chart";
 import { analyzeQuestion, fetchSchemaStatus } from "../lib/api";
 import { previewBoard, previewPayload } from "../lib/fixtures";
 import {
   buildAssistantPreview,
+  buildDisplayReportMarkdown,
   buildFollowUps,
   buildJudgmentBreakdown,
   buildProcessItems,
@@ -55,12 +57,34 @@ export default function Page() {
   }, []);
 
   const answerParts = useMemo(() => summarizeAnswer(latestResult?.answer ?? ""), [latestResult?.answer]);
+  const displayReportMarkdown = useMemo(
+    () => buildDisplayReportMarkdown(latestResult?.answer ?? ""),
+    [latestResult?.answer],
+  );
   const processItems = useMemo(() => buildProcessItems(messages, latestResult), [messages, latestResult]);
   const followUps = useMemo(() => buildFollowUps(latestResult), [latestResult]);
   const judgmentRows = useMemo(
     () => buildJudgmentBreakdown(latestResult, answerParts),
     [answerParts, latestResult],
   );
+  const tableColumns = useMemo(
+    () => (latestResult?.raw_rows[0] ? Object.keys(latestResult.raw_rows[0]) : []),
+    [latestResult?.raw_rows],
+  );
+  const evidenceTableStyle = useMemo(() => {
+    const columnCount = tableColumns.length || 3;
+    const rowCount = latestResult?.raw_rows.length ?? 0;
+    const fitWidth = Math.min(1020, Math.max(580, columnCount * 170 + 120));
+    const rowPadding =
+      rowCount <= 4 ? "11px 14px" :
+      rowCount <= 8 ? "9px 12px" :
+      "8px 10px";
+
+    return {
+      "--table-fit-width": `${fitWidth}px`,
+      "--table-row-padding": rowPadding,
+    } as CSSProperties;
+  }, [latestResult?.raw_rows.length, tableColumns.length]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -261,12 +285,12 @@ export default function Page() {
                     <div className="empty-plot">这轮结果不适合直接画图，保留下方表格做明细确认。</div>
                   )}
                 </div>
-                <div className="table-shell compact-table">
+                <div className="table-shell compact-table" style={evidenceTableStyle}>
                   {latestResult.raw_rows.length > 0 ? (
                     <table>
                       <thead>
                         <tr>
-                          {Object.keys(latestResult.raw_rows[0]).map((column) => (
+                          {tableColumns.map((column) => (
                             <th key={column}>{column}</th>
                           ))}
                         </tr>
@@ -274,7 +298,7 @@ export default function Page() {
                       <tbody>
                         {latestResult.raw_rows.map((row, index) => (
                           <tr key={`${index}-${Object.values(row).join("-")}`}>
-                            {Object.keys(latestResult.raw_rows[0]).map((column, columnIndex) => (
+                            {tableColumns.map((column, columnIndex) => (
                               <td className={columnIndex > 0 ? "numeric-cell" : ""} key={column}>
                                 {row[column] ?? ""}
                               </td>
@@ -291,7 +315,18 @@ export default function Page() {
                   <details className="report-details">
                     <summary>查看完整报告</summary>
                     <div className="markdown-body">
-                      <ReactMarkdown>{latestResult.answer}</ReactMarkdown>
+                      <ReactMarkdown
+                        components={{
+                          table: ({ children, node: _node, ...props }) => (
+                            <div className="markdown-table-scroll">
+                              <table {...props}>{children}</table>
+                            </div>
+                          ),
+                        }}
+                        remarkPlugins={[remarkGfm]}
+                      >
+                        {displayReportMarkdown}
+                      </ReactMarkdown>
                     </div>
                   </details>
                 )}

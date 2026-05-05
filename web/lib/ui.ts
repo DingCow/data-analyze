@@ -12,6 +12,15 @@ export type JudgmentBreakdownItem = {
 
 const MAX_SUMMARY_LENGTH = 118;
 const MAX_PREVIEW_LENGTH = 86;
+const GENERIC_REPORT_HEADINGS = new Set(
+  [
+  "核心判断",
+  "结果概览",
+  "分析结论",
+  "结论",
+  "Core judgment",
+  ].map((heading) => heading.toLowerCase()),
+);
 
 function compactText(text: string): string {
   return text.replace(/\s+/g, " ").trim();
@@ -69,6 +78,31 @@ export function stripMarkdown(text: string): string {
     .replace(/^[-*]\s*/gm, "")
     .replace(/\n{2,}/g, "\n")
     .trim();
+}
+
+export function buildDisplayReportMarkdown(answer: string): string {
+  const lines = answer.replace(/\r\n/g, "\n").split("\n");
+  const firstContentIndex = lines.findIndex((line) => line.trim());
+  if (firstContentIndex === -1) {
+    return "";
+  }
+
+  const firstContent = lines[firstContentIndex].trim();
+  const headingMatch = firstContent.match(/^#{1,6}\s+(.+)$/u);
+  if (!headingMatch) {
+    return answer.trim();
+  }
+
+  const headingText = headingMatch[1]
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/[：:。.\s]+$/u, "")
+    .trim()
+    .toLowerCase();
+  if (!GENERIC_REPORT_HEADINGS.has(headingText)) {
+    return answer.trim();
+  }
+
+  return [...lines.slice(0, firstContentIndex), ...lines.slice(firstContentIndex + 1)].join("\n").trim();
 }
 
 export function summarizeAnswer(answer: string): AnswerSummary {

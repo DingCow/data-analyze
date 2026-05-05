@@ -60,7 +60,7 @@ def run(schema: str, question: str, history: list[dict]) -> tuple[str, Optional[
       (最终回答文字, 图表配置, 原始数据行)
       - 最终回答文字：展示给用户的 Markdown 文字
       - 图表配置：Report Agent 决定的图表参数，None 表示不画图
-      - 原始数据行：SQL 查到的结构化数据，供 app.py 按图表配置画图
+      - 原始数据行：SQL 查到的结构化数据，供 CLI/Web/API 展示或渲染
     """
     # 第一步：判断问题类型
     intent = classify(question)
@@ -90,8 +90,8 @@ def run(schema: str, question: str, history: list[dict]) -> tuple[str, Optional[
         return markdown, chart_config, raw_rows
 
     else:
-        # 简单查询：SQL Agent 取数，直接返回结构化数据，由 app.py 用 st.dataframe() 渲染
+        # 简单查询：SQL Agent 取数，直接返回结构化数据，交给入口层展示
         print("  → 简单查询，启动 SQL Agent")
         raw_rows = sql.run(schema, question, history)
-        # 简单查询不需要文字说明，返回空字符串，数据行由 app.py 直接展示
+        # 简单查询不需要文字说明，返回空字符串，数据行由入口层直接展示
         return "", None, raw_rows
