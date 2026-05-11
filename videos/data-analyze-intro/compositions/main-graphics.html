@@ -1,0 +1,594 @@
+<template id="main-graphics-template">
+  <div id="main-graphics" data-composition-id="main-graphics" data-width="1920" data-height="1080" data-duration="21">
+    <div class="stage-grid" data-layout-ignore>
+      <div class="scan scan-a"></div>
+      <div class="scan scan-b"></div>
+      <div class="grain"></div>
+    </div>
+
+    <section id="scene-1" class="clip scene scene-title" data-start="0" data-duration="3.95" data-track-index="2">
+      <div class="scene-content title-content">
+        <p class="kicker">PROJECT CLOSEOUT FILM / 21S</p>
+        <h1>data_analyze</h1>
+        <p class="lede">把一个业务问题，推进成 SQL、证据、图表和可追问的报告。</p>
+      </div>
+      <div class="question-strip">
+        <span>自然语言问题</span>
+        <strong>上季度哪些城市的收入动能下滑最明显？</strong>
+      </div>
+    </section>
+
+    <section id="scene-2" class="clip scene" data-start="3.5" data-duration="4.3" data-track-index="3">
+      <div class="scene-content flow-content">
+        <p class="kicker">DATA FLOW</p>
+        <h2>从 SQLite 到 Agent 编排</h2>
+        <div class="flow-map">
+          <div class="flow-node node-db">
+            <span>SQLite</span>
+            <strong>318万+ 订单</strong>
+          </div>
+          <div class="flow-line line-1"></div>
+          <div class="flow-node node-router">
+            <span>Router</span>
+            <strong>simple / complex</strong>
+          </div>
+          <div class="flow-line line-2"></div>
+          <div class="flow-node node-sql">
+            <span>SQL Agent</span>
+            <strong>只返回原始数据</strong>
+          </div>
+          <div class="flow-line line-3"></div>
+          <div class="flow-node node-report">
+            <span>Report</span>
+            <strong>结论 + 图表配置</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="scene-3" class="clip scene" data-start="7.45" data-duration="4.35" data-track-index="4">
+      <div class="scene-content split-content">
+        <div class="route-panel">
+          <p class="kicker">LANGGRAPH RUNTIME</p>
+          <h2>两条路径，按问题复杂度分流</h2>
+          <div class="route-row simple-route">
+            <span class="route-label">simple</span>
+            <strong>classify -> simple_sql -> finalize</strong>
+          </div>
+          <div class="route-row complex-route">
+            <span class="route-label">complex</span>
+            <strong>decompose -> sql/retry -> analyze -> report</strong>
+          </div>
+        </div>
+        <div class="model-stack">
+          <div class="model-card flash">
+            <span>deepseek-v4-flash</span>
+            <strong>低成本路由 / 报告格式化</strong>
+          </div>
+          <div class="model-card pro">
+            <span>deepseek-v4-pro</span>
+            <strong>问题拆解 / 深度分析</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="scene-4" class="clip scene" data-start="11.45" data-duration="4.8" data-track-index="5">
+      <div class="scene-content workbench-content">
+        <div class="web-shell">
+          <div class="topbar">
+            <span></span>
+            <span></span>
+            <span></span>
+            <b>数据分析助手</b>
+          </div>
+          <div class="composer">
+            <span>就绪</span>
+            <p>从一个业务判断开始...</p>
+            <button>开始分析</button>
+          </div>
+          <div class="result-grid">
+            <article>
+              <span>结论</span>
+              <strong>收入动能下降集中在少数城市</strong>
+            </article>
+            <article>
+              <span>证据</span>
+              <strong>raw_rows / chart_config</strong>
+            </article>
+            <article>
+              <span>排障</span>
+              <strong>debug.trace</strong>
+            </article>
+          </div>
+        </div>
+        <div class="workbench-copy">
+          <p class="kicker">CLI + FASTAPI + NEXT.JS</p>
+          <h2>不是只会回答，而是能留下分析页面</h2>
+          <p>Markdown 报告、Plotly 图表、原始数据表和调试路径，在同一个工作台里闭环。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="scene-5" class="clip scene" data-start="15.9" data-duration="5.1" data-track-index="6">
+      <div class="scene-content final-content">
+        <p class="kicker">STATUS</p>
+        <h2>学习型项目，已经收成一个可用 MVP</h2>
+        <div class="final-list">
+          <div><span>01</span><strong>固定 SQLite 只读查询边界</strong></div>
+          <div><span>02</span><strong>LangGraph 主线跑通并纳入测试</strong></div>
+          <div><span>03</span><strong>前后端工作台可继续追问</strong></div>
+        </div>
+        <p class="closing">少堆功能，把主链路打通。</p>
+      </div>
+    </section>
+
+    <div class="outro-mark">data_analyze / 2026</div>
+    <div id="fade-out"></div>
+
+    <style>
+      #main-graphics {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #10130f;
+        color: #f8f1df;
+        font-family: "PingFang SC", "Hiragino Sans GB", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      .stage-grid {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        background:
+          linear-gradient(rgba(248, 241, 223, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(248, 241, 223, 0.05) 1px, transparent 1px),
+          #10130f;
+        background-size: 80px 80px;
+      }
+
+      .stage-grid::before {
+        content: "orders_all   fees_24   taizhang   users_info   parking_stations_all";
+        position: absolute;
+        left: 96px;
+        bottom: 58px;
+        font: 600 22px/1 "SFMono-Regular", Menlo, monospace;
+        color: rgba(248, 241, 223, 0.16);
+        white-space: nowrap;
+      }
+
+      .scan {
+        position: absolute;
+        width: 2px;
+        height: 120%;
+        top: -10%;
+        background: rgba(131, 209, 139, 0.28);
+      }
+
+      .scan-a {
+        left: 260px;
+      }
+
+      .scan-b {
+        right: 420px;
+        background: rgba(212, 88, 63, 0.22);
+      }
+
+      .grain {
+        position: absolute;
+        inset: 0;
+        background-image:
+          radial-gradient(circle at 20% 30%, rgba(248, 241, 223, 0.05) 0 1px, transparent 1px),
+          radial-gradient(circle at 70% 80%, rgba(248, 241, 223, 0.04) 0 1px, transparent 1px);
+        background-size: 42px 42px, 56px 56px;
+        opacity: 0.45;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+
+      .scene-content {
+        width: 100%;
+        height: 100%;
+        padding: 104px 128px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 34px;
+      }
+
+      .kicker {
+        font: 700 22px/1 "SFMono-Regular", Menlo, monospace;
+        color: #83d18b;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-size: 178px;
+        line-height: 0.92;
+        font-weight: 900;
+        letter-spacing: 0;
+        color: #f8f1df;
+        text-shadow: 0 0 28px rgba(131, 209, 139, 0.18);
+      }
+
+      h2 {
+        max-width: 1180px;
+        font-size: 92px;
+        line-height: 1.04;
+        font-weight: 850;
+        letter-spacing: 0;
+        color: #f8f1df;
+      }
+
+      .lede,
+      .workbench-copy p,
+      .closing {
+        max-width: 980px;
+        font-size: 42px;
+        line-height: 1.35;
+        color: #d9d0bd;
+      }
+
+      .question-strip {
+        position: absolute;
+        left: 128px;
+        right: 128px;
+        bottom: 106px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+        padding: 26px 34px;
+        background: #f3ead7;
+        color: #10130f;
+        border: 3px solid #83d18b;
+      }
+
+      .question-strip span,
+      .question-strip strong {
+        font-size: 30px;
+      }
+
+      .question-strip span {
+        color: #656b5b;
+      }
+
+      .flow-content {
+        justify-content: flex-start;
+        padding-top: 142px;
+      }
+
+      .flow-map {
+        position: relative;
+        width: 100%;
+        height: 470px;
+        margin-top: 34px;
+      }
+
+      .flow-node {
+        position: absolute;
+        width: 310px;
+        min-height: 176px;
+        padding: 30px;
+        background: #f3ead7;
+        color: #10130f;
+        border: 3px solid #10130f;
+        box-shadow: 14px 14px 0 #83d18b;
+      }
+
+      .flow-node span,
+      .model-card span,
+      .route-label,
+      .result-grid span,
+      .final-list span {
+        display: block;
+        font: 700 22px/1 "SFMono-Regular", Menlo, monospace;
+        color: #d4583f;
+        margin-bottom: 18px;
+      }
+
+      .flow-node strong,
+      .model-card strong,
+      .route-row strong,
+      .result-grid strong,
+      .final-list strong {
+        display: block;
+        font-size: 34px;
+        line-height: 1.18;
+      }
+
+      .route-row strong {
+        color: #f8f1df;
+      }
+
+      .node-db {
+        left: 0;
+        top: 120px;
+      }
+
+      .node-router {
+        left: 430px;
+        top: 40px;
+      }
+
+      .node-sql {
+        left: 860px;
+        top: 200px;
+      }
+
+      .node-report {
+        left: 1290px;
+        top: 96px;
+      }
+
+      .flow-line {
+        position: absolute;
+        height: 4px;
+        background: #83d18b;
+        transform-origin: left center;
+      }
+
+      .line-1 {
+        left: 310px;
+        top: 212px;
+        width: 160px;
+        transform: rotate(-14deg);
+      }
+
+      .line-2 {
+        left: 735px;
+        top: 224px;
+        width: 168px;
+        transform: rotate(25deg);
+      }
+
+      .line-3 {
+        left: 1170px;
+        top: 296px;
+        width: 170px;
+        transform: rotate(-30deg);
+      }
+
+      .split-content {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 80px;
+      }
+
+      .route-panel {
+        width: 1000px;
+      }
+
+      .route-row {
+        margin-top: 32px;
+        padding: 30px 34px;
+        background: rgba(243, 234, 215, 0.08);
+        border: 2px solid rgba(248, 241, 223, 0.28);
+      }
+
+      .simple-route {
+        border-left: 10px solid #83d18b;
+      }
+
+      .complex-route {
+        border-left: 10px solid #d4583f;
+      }
+
+      .model-stack {
+        width: 510px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .model-card {
+        padding: 34px;
+        background: #f3ead7;
+        color: #10130f;
+        border: 3px solid #10130f;
+      }
+
+      .model-card.pro {
+        transform: translateX(48px);
+        box-shadow: -14px 14px 0 #d4583f;
+      }
+
+      .model-card.flash {
+        box-shadow: 14px 14px 0 #83d18b;
+      }
+
+      .workbench-content {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 74px;
+      }
+
+      .web-shell {
+        width: 930px;
+        min-height: 620px;
+        padding: 28px;
+        background: #f3ead7;
+        color: #10130f;
+        border: 4px solid #10130f;
+        box-shadow: 20px 20px 0 #83d18b;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 58px;
+        border-bottom: 2px solid rgba(16, 19, 15, 0.2);
+      }
+
+      .topbar span {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #d4583f;
+      }
+
+      .topbar span:nth-child(2) {
+        background: #d5b55f;
+      }
+
+      .topbar span:nth-child(3) {
+        background: #83d18b;
+      }
+
+      .topbar b {
+        margin-left: auto;
+        font-size: 24px;
+      }
+
+      .composer {
+        margin-top: 36px;
+        padding: 28px;
+        display: grid;
+        grid-template-columns: 110px 1fr 166px;
+        align-items: center;
+        gap: 20px;
+        border: 2px solid rgba(16, 19, 15, 0.18);
+      }
+
+      .composer span {
+        font: 700 22px/1 "SFMono-Regular", Menlo, monospace;
+        color: #d4583f;
+      }
+
+      .composer p {
+        font-size: 30px;
+        color: #656b5b;
+      }
+
+      .composer button {
+        height: 62px;
+        border: 0;
+        background: #10130f;
+        color: #f8f1df;
+        font-size: 24px;
+      }
+
+      .result-grid {
+        margin-top: 34px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+      }
+
+      .result-grid article {
+        min-height: 250px;
+        padding: 26px;
+        background: rgba(16, 19, 15, 0.06);
+        border: 2px solid rgba(16, 19, 15, 0.14);
+      }
+
+      .workbench-copy {
+        width: 650px;
+      }
+
+      .final-content {
+        align-items: flex-start;
+      }
+
+      .final-list {
+        width: 1280px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        margin-top: 18px;
+      }
+
+      .final-list div {
+        min-height: 190px;
+        padding: 30px;
+        background: #f3ead7;
+        color: #10130f;
+        border-top: 12px solid #83d18b;
+      }
+
+      .closing {
+        margin-top: 18px;
+        color: #83d18b;
+      }
+
+      .outro-mark {
+        position: absolute;
+        right: 92px;
+        bottom: 52px;
+        font: 700 22px/1 "SFMono-Regular", Menlo, monospace;
+        color: rgba(248, 241, 223, 0.42);
+        opacity: 0;
+      }
+
+      #fade-out {
+        position: absolute;
+        inset: 0;
+        background: #10130f;
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      const tl = gsap.timeline({ paused: true });
+      const scenes = ["#scene-1", "#scene-2", "#scene-3", "#scene-4", "#scene-5"];
+
+      tl.set(scenes, { opacity: 0 }, 0);
+      tl.set("#scene-1", { opacity: 1 }, 0);
+
+      tl.from("#scene-1 .kicker", { y: 24, opacity: 0, duration: 0.45, ease: "power2.out" }, 0.15);
+      tl.from("#scene-1 h1", { y: 72, opacity: 0, duration: 0.62, ease: "power3.out" }, 0.35);
+      tl.from("#scene-1 .lede", { y: 36, opacity: 0, duration: 0.5, ease: "power2.out" }, 0.78);
+      tl.from(".question-strip", { y: 48, opacity: 0, duration: 0.5, ease: "power2.out" }, 1.1);
+      tl.to("#scene-1", { opacity: 0, duration: 0.42, ease: "power2.inOut" }, 3.4);
+
+      tl.set("#scene-2", { opacity: 1 }, 3.5);
+      tl.from("#scene-2 .kicker", { x: -42, opacity: 0, duration: 0.4, ease: "power2.out" }, 3.62);
+      tl.from("#scene-2 h2", { y: 54, opacity: 0, duration: 0.52, ease: "power3.out" }, 3.78);
+      tl.from(".flow-node", { y: 34, opacity: 0, duration: 0.46, stagger: 0.16, ease: "power2.out" }, 4.32);
+      tl.from(".flow-line", { scaleX: 0, opacity: 0, duration: 0.38, stagger: 0.16, ease: "power1.out" }, 4.78);
+      tl.to("#scene-2", { opacity: 0, duration: 0.42, ease: "power2.inOut" }, 7.35);
+
+      tl.set("#scene-3", { opacity: 1 }, 7.45);
+      tl.from("#scene-3 .kicker", { y: 30, opacity: 0, duration: 0.38, ease: "power2.out" }, 7.58);
+      tl.from("#scene-3 h2", { y: 50, opacity: 0, duration: 0.52, ease: "power3.out" }, 7.76);
+      tl.from(".route-row", { x: -46, opacity: 0, duration: 0.5, stagger: 0.22, ease: "power2.out" }, 8.34);
+      tl.from(".model-card", { x: 58, opacity: 0, duration: 0.5, stagger: 0.18, ease: "power2.out" }, 8.55);
+      tl.to("#scene-3", { opacity: 0, duration: 0.42, ease: "power2.inOut" }, 11.35);
+
+      tl.set("#scene-4", { opacity: 1 }, 11.45);
+      tl.from(".web-shell", { y: 60, opacity: 0, duration: 0.58, ease: "power3.out" }, 11.62);
+      tl.from(".composer", { y: 28, opacity: 0, duration: 0.42, ease: "power2.out" }, 12.08);
+      tl.from(".result-grid article", { y: 34, opacity: 0, duration: 0.42, stagger: 0.1, ease: "power2.out" }, 12.36);
+      tl.from("#scene-4 .kicker", { x: 40, opacity: 0, duration: 0.38, ease: "power2.out" }, 12.02);
+      tl.from("#scene-4 h2", { x: 52, opacity: 0, duration: 0.5, ease: "power3.out" }, 12.24);
+      tl.from("#scene-4 .workbench-copy p", { y: 34, opacity: 0, duration: 0.46, ease: "power2.out" }, 12.68);
+      tl.to("#scene-4", { opacity: 0, duration: 0.42, ease: "power2.inOut" }, 15.8);
+
+      tl.set("#scene-5", { opacity: 1 }, 15.9);
+      tl.from("#scene-5 .kicker", { y: 24, opacity: 0, duration: 0.38, ease: "power2.out" }, 16.02);
+      tl.from("#scene-5 h2", { y: 58, opacity: 0, duration: 0.56, ease: "power3.out" }, 16.18);
+      tl.from(".final-list div", { y: 38, opacity: 0, duration: 0.46, stagger: 0.15, ease: "power2.out" }, 16.92);
+      tl.from(".closing", { y: 30, opacity: 0, duration: 0.46, ease: "power2.out" }, 17.72);
+      tl.to(".outro-mark", { opacity: 1, duration: 0.42, ease: "power2.out" }, 18.25);
+      tl.to("#fade-out", { opacity: 1, duration: 0.8, ease: "power2.inOut" }, 20.15);
+
+      tl.to(".scan-a", { x: 920, duration: 21, ease: "none" }, 0);
+      tl.to(".scan-b", { x: -760, duration: 21, ease: "none" }, 0);
+
+      window.__timelines["main-graphics"] = tl;
+    </script>
+  </div>
+</template>
